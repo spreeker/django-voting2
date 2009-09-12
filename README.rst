@@ -8,11 +8,11 @@ which can be found here::
 
     http://code.google.com/p/django-voting/
 
-I need to create an overview file like this one:
+I need to create an overview file like this one::
 
     http://django-voting.googlecode.com/svn/trunk/docs/overview.txt
 
-This app is really close to the original django-voting but improved in a few ways::
+This app is really close to the original django-voting but improved in a few ways:
 
     - Support more vote types.
     I added support for many more votes types,
