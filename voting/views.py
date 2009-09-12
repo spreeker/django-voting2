@@ -8,8 +8,6 @@ from django.template import loader, RequestContext
 from django.utils import simplejson
 
 from voting.models import Vote
-from gamelogic import actions 
-
 from voting.models import possible_votes
 
 def vote_on_object(request, model, direction, post_vote_redirect=None,
@@ -83,8 +81,7 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
                                  'the request, or the object being voted on '
                                  'must define a get_absolute_url method or '
                                  'property.')
-        #Vote.objects.record_vote(request.user, obj, direction)
-        actions.vote(request.user, obj, direction, keep_private=False, ) 
+        Vote.objects.record_vote(request.user, obj, direction)
         return HttpResponseRedirect(next)
     else:
         if not template_name:
@@ -152,8 +149,7 @@ def xmlhttprequest_vote_on_object(request, model, direction,
             'No %s found for %s.' % (model._meta.verbose_name, lookup_kwargs))
 
     # Vote and respond
-    #Vote.objects.record_vote(request.user, obj, vote)
-    vote(request.user, obj, direction, False, api_interface="dashboard") 
+    Vote.objects.record_vote(request.user, obj, vote)
     return HttpResponse(simplejson.dumps({
         'success': True,
         'score': Vote.objects.get_object_votes(obj),
