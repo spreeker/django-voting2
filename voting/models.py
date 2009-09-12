@@ -17,8 +17,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
 
-from piston.models import Consumer
-
 from voting.managers import VoteManager 
 from voting.managers import possible_votes
 
