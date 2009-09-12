@@ -19,13 +19,9 @@ easy changable by editing voting/vote_types.py
 Now not only up and down votes but any kind of vote is supported.
 In voting/vote_types.py you can see current supported vote_types which you can and 
 should change for you needs.
-
 - No more raw sql The origingal code contained raw sql. The newer ORM has support fro aggegration
-which i thanfully use.
-
 - More managers functions, like get controversial which looks op
 voted objects which are spliting up the community.
-
 - many small code clean ups, more consistens functions arguments
 - small but neccesairy changes to the template tags.
 
