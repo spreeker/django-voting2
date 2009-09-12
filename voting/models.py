@@ -18,7 +18,7 @@ from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
 
 from voting.managers import VoteManager 
-from voting.managers import possible_votes
+from voting.vote_types import possible_votes
 
 class Vote(models.Model):
     user = models.ForeignKey(User)
