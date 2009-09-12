@@ -1,0 +1,5 @@
+
+there is no setup.py yet.. 
+
+but if you put the voting directory somewhere on you python path
+i should just work.
