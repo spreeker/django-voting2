@@ -4,8 +4,10 @@ django-voting2
 --------------
 
 This app is derived from the django-voting app.
+I should steal most of the readme stuff from their website because 
+this app is really close but improved in a few ways:
 
-It is improved in a few ways:
+Django-voting2 is improved in a few ways:
 
 -Support more vote types.
 I added support for many more votes types,
@@ -27,4 +29,4 @@ which i thanfully use.
 TODO
 
 Make this a better package.. a better name maybe?
-if you find this code use full dont hessitate to let me know.
+if you find this code usefull don't hessitate to let me know.
