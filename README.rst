@@ -3,30 +3,36 @@
 django-voting2
 --------------
 
-This app is derived from the django-voting app.
-I should steal most of the readme stuff from their website because 
-this app is really close but improved in a few ways:
+This app is heavily derived from the django-voting app.
+which can be found here::
 
-Django-voting2 is improved in a few ways:
+    http://code.google.com/p/django-voting/
 
--Support more vote types.
-I added support for many more votes types,
-easy changable by editing voting/vote_types.py
-Now not only up and down votes but any kind of vote is supported.
-It is stored as an integer
-In the vote_types.py you can see i needed extensive support for blank vote types.
+I need to create an overview file like this one:
 
--No more raw sql
-The origingal code contained raw sql. The newer ORM has support fro aggegration
-which i thanfully use.
+    http://django-voting.googlecode.com/svn/trunk/docs/overview.txt
 
--More managers functions, like get controversial which looks op
- voted objects which are spliting up the community.
+This app is really close to the original django-voting but improved in a few ways::
 
--many small code clean ups.
--small but neccesairy changes to the template tags.
+    - Support more vote types.
+    I added support for many more votes types,
+    easy changable by editing voting/vote_types.py
+    Now not only up and down votes but any kind of vote is supported.
+    In voting/vote_types.py you can see current supported vote_types which you can and 
+    should change for you needs.
+
+    - No more raw sql
+    The origingal code contained raw sql. The newer ORM has support fro aggegration
+    which i thanfully use.
+
+    - More managers functions, like get controversial which looks op
+    voted objects which are spliting up the community.
+
+    - many small code clean ups, more consistens functions arguments
+    - small but neccesairy changes to the template tags.
 
 TODO
+====
 
 Make this a better package.. a better name maybe?
 if you find this code usefull don't hessitate to let me know.
