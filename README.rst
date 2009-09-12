@@ -14,15 +14,13 @@ I need to create an overview file like this one::
 
 This app is really close to the original django-voting but improved in a few ways:
 
-    - Support more vote types.
-    I added support for many more votes types,
+    - Support more vote types.I added support for many more votes types,
     easy changable by editing voting/vote_types.py
     Now not only up and down votes but any kind of vote is supported.
     In voting/vote_types.py you can see current supported vote_types which you can and 
     should change for you needs.
 
-    - No more raw sql
-    The origingal code contained raw sql. The newer ORM has support fro aggegration
+    - No more raw sql The origingal code contained raw sql. The newer ORM has support fro aggegration
     which i thanfully use.
 
     - More managers functions, like get controversial which looks op
