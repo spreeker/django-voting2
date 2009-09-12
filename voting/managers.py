@@ -128,6 +128,8 @@ class VoteManager(models.Manager):
         meaning it divides the ppl in 50/50.
         since for is 1 and against is -1, a score close to 0
         indicates controversy.
+        
+        this is working by aproximation amd should be good enoug for most cases.
         """
         ctype = ContentType.objects.get_for_model(Model)
         queryset = self.filter(content_type=ctype,)
