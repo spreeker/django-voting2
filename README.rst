@@ -1,4 +1,3 @@
-
 django-voting2
 ==============
 
@@ -20,11 +19,12 @@ Support for more vote types.
 No more raw sql 
   The original code contained raw sql. The newer django ORM has support for aggregation
 
-More managers functions 
-  like get controversial which looks op voted objects which are splitting up the community.
+More manager functions
+  I added more aggregation functions like
+  get_controversial, which looks op voted objects which are have about the same amount of up and down votes.
 
 many small code clean ups, 
-  more consistent functions arguments, small but necessarily changes to the template tags.
+  more consistent functions arguments, small but necessarily changes to the template tags to support more vote types.
 
 
 TODO
