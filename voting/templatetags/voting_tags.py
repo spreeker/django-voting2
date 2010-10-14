@@ -4,6 +4,8 @@ from django.utils.html import escape
 from voting.models import Vote
 from voting.managers import possible_votes
 
+import logging
+
 register = template.Library()
 
 class VoteByUserNode(template.Node):
@@ -47,9 +49,9 @@ class VotesForObjectNode(template.Node):
         except template.VariableDoesNotExist:
             return ''
 
-        vote_counts = Vote.objects.get_for_object( object )
+        vote_counts = Vote.objects.get_object_votes(object)
         votes = dict.fromkeys( possible_votes.keys , 0 ) 
-        votes.update( vote_counts )
+        votes.update(vote_counts)
         context[self.context_var] = votes 
         return ''
 
