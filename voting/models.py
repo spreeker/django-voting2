@@ -15,7 +15,7 @@ from django.db import models, IntegrityError
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 from voting.managers import VoteManager 
 from voting.vote_types import possible_votes
@@ -26,8 +26,8 @@ class Vote(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField() 
     payload = generic.GenericForeignKey('content_type', 'object_id')
-
-    vote = models.IntegerField(choices = possible_votes.items() )
+    # vote AKA direction.
+    direction = models.IntegerField(choices = possible_votes.items(), default=1 )
     time_stamp = models.DateTimeField(editable = False , default=datetime.now )
     # optional **kwargs
     is_archived = models.BooleanField(default = False)
@@ -37,8 +37,7 @@ class Vote(models.Model):
     objects = VoteManager()
 
     def __unicode__(self):
-        return unicode(self.vote) + u" on \"" + str(self.payload) + u"\" by " + self.user.username
+        return u"%s on %s  by %s" % (self.direction, self.payload, self.user.username)
 
     class Meta:
         db_table = 'votes'
-
