@@ -6,7 +6,7 @@ this needs a more portable solution.
 note: it is i18n enabled.
 """
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 votes = {
     -1 : _(u"Against"),
