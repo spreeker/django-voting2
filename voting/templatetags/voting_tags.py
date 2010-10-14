@@ -4,7 +4,6 @@ from django.utils.html import escape
 from voting.models import Vote
 from voting.managers import possible_votes
 
-import logging
 
 register = template.Library()
 
