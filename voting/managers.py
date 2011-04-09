@@ -10,7 +10,6 @@ from django.utils.translation import ugettext_lazy as _
 #XXX likely to change
 from vote_types import votes, blank_votes, normal_votes
 from vote_types import possible_votes, multiply_votes
-from vote_types import parlement_votes
 
 class VoteManager(models.Manager):
 
@@ -69,7 +68,7 @@ class VoteManager(models.Manager):
 
         return queryset.order_by("-time_stamp")
     
-    def get_object_votes(self, obj, all=False):
+    def get_for_object(self, obj, all=False):
         """
         Get a dictionary mapping vote to votecount
         """
@@ -120,10 +119,7 @@ class VoteManager(models.Manager):
         return vote_dict
 
     def get_popular(self, Model, object_ids=None, reverse=False, min_tv=2):
-        """ return queryset ordered by popularity 
-        
-            min_tv = minimum total votes, to put in a threshold.
-        """
+        """ return queryset ordered by popularity """
         ctype = ContentType.objects.get_for_model(Model)
         queryset = self.filter(content_type=ctype,)
         queryset = queryset.filter(is_archived=False) 
@@ -198,7 +194,7 @@ class VoteManager(models.Manager):
         since for is 1 and against is -1, a score close to 0
         indicates controversy.
 
-        this is working by aproximation amd should be good enoug for most cases.
+        this is working by aproximation and should be good enough for most cases.
         """
         ctype = ContentType.objects.get_for_model(Model)
         queryset = self.filter(content_type=ctype,)
@@ -222,32 +218,29 @@ class VoteManager(models.Manager):
 
     def get_for_direction(self, Model, directions=[1,-1]):
         """
-        return object_ids with a specific direction. 
+        return objects with a specific direction for ...
+        TODO
         """
         ctype = ContentType.objects.get_for_model(Model)
         queryset = self.filter(content_type=ctype,)
         queryset = queryset.filter(is_archived=False) 
         queryset = queryset.filter(direction__in=directions)
-        queryset = queryset.values('object_id',)
 
         return queryset
 
-    def record_vote(self, user, obj, direction, 
-                keep_private=False, api_interface=None, 
-                directions=normal_votes.keys()):
+    def record_vote(self, user, obj, direction, keep_private=False, api_interface=None):
         """
         Archive old votes by switching the is_archived flag to True
         for all the previous votes on <obj> by <user>.
         And we check for and dismiss a repeated vote.
-        We save old votes for research, to see interesting
+        We save old votes for research, probable interesting
         opinion changes.
         """
-        if not direction in directions:
-            raise ValueError('Invalid vote %s must be in %s' % (direction, directions))
+        if not direction in possible_votes.keys():
+            raise ValueError('Invalid vote %s must be in %s' % (direction, possible_votes.keys()))
 
         ctype = ContentType.objects.get_for_model(obj)
         votes = self.filter(user=user, content_type=ctype, object_id=obj._get_pk_val(), is_archived=False)
-        votes = votes.filter(direction__in=directions)
 
         voted_already = False
         repeated_vote = False
@@ -269,33 +262,11 @@ class VoteManager(models.Manager):
             vote.save()
         return repeated_vote, voted_already, vote
 
-
-class ParliamentVoteManager(VoteManager):
-    """ deal with votes which are parliament votes, so called laws """
-
-    def get_query_set(self):
-        """ filter votes on law votes """
-        return super(ParliamentVoteManager, self).get_query_set().filter(
-            direction__in=parlement_votes.keys(),
-            is_archived=False,
-            )
-        
-
-    def make_law(self, user, obj, direction, **kwarg):
-        """ make law, record parliament vote """
-        api_interface=kwarg.get('api_interface', '')
-        self.record_vote(user, obj, direction,
-            keep_private=False, api_interface=api_interface,
-            directions=parlement_votes.keys())
-
-
 # Generic annotation code to annotate queryset from other Models with
 # data from the Vote table 
 # 
-# NOTE: my experience is that below raw sql works but is slow.
+# NOTE: my experience is that below raw sql works but is very slow.
 # 
-#issues = vote_annotate(issues, Vote.payload, 'vote', Sum, desc=False)
-#
 # more info:
 #
 # http://djangosnippets.org/snippets/2034/

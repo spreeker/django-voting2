@@ -8,9 +8,7 @@ from django.template import loader, RequestContext
 from django.utils import simplejson
 
 from voting.models import Vote
-from gamelogic import actions 
-
-from voting.managers import possible_votes
+from voting.models import possible_votes
 
 def vote_on_object(request, model, direction, post_vote_redirect=None,
         object_id=None, slug=None, slug_field=None, template_name=None,
@@ -36,6 +34,8 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
             The object being voted on.
         direction
             The type of vote which will be registered for the object.
+
+
     """
     if allow_xmlhttprequest and request.is_ajax():
         return xmlhttprequest_vote_on_object(request, model, direction,
@@ -81,9 +81,7 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
                                  'the request, or the object being voted on '
                                  'must define a get_absolute_url method or '
                                  'property.')
-        #Vote.objects.record_vote(request.user, obj, direction)
-        # should be done with signal pre_save.
-        actions.vote(request.user, obj, direction, keep_private=False, ) 
+        Vote.objects.record_vote(request.user, obj, direction)
         return HttpResponseRedirect(next)
     else:
         if not template_name:
@@ -151,9 +149,7 @@ def xmlhttprequest_vote_on_object(request, model, direction,
             'No %s found for %s.' % (model._meta.verbose_name, lookup_kwargs))
 
     # Vote and respond
-    #should be done whit signal presave.
-    #Vote.objects.record_vote(request.user, obj, vote)
-    actions.vote(request.user, obj, direction, keep_private=False,) 
+    Vote.objects.record_vote(request.user, obj, vote)
     return HttpResponse(simplejson.dumps({
         'success': True,
         'score': Vote.objects.get_object_votes(obj),

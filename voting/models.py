@@ -18,7 +18,6 @@ from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext_lazy as _
 
 from voting.managers import VoteManager 
-from voting.managers import ParliamentVoteManager 
 from voting.vote_types import possible_votes
 
 class Vote(models.Model):
@@ -36,7 +35,6 @@ class Vote(models.Model):
     api_interface = models.IntegerField(null=True , blank=True) #key naar oauth consumer 
    
     objects = VoteManager()
-    parliament = ParliamentVoteManager()
 
     def __unicode__(self):
         return u"%s on %s  by %s" % (self.direction, self.payload, self.user.username)

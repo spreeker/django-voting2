@@ -23,6 +23,7 @@ DATABASE_NAME = os.path.join(DIRNAME, 'database.db')
 
 INSTALLED_APPS = (
     'django.contrib.auth',
+    'django.contrib.sessions',
     'django.contrib.contenttypes',
     'voting',
     'voting.tests',

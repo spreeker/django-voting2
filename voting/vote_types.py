@@ -10,7 +10,6 @@ from django.utils.translation import ugettext_lazy as _
 
 votes = {
     -1 : _(u"Against"),
-    0  : _(u"blank"),
     1  : _(u"For"),
 }
 
@@ -35,12 +34,6 @@ normal_votes.update(blank_votes)
 multiply_votes = {
     20 : _("Multiply"),
 }
-normal_votes.update(multiply_votes)
-
-parlement_votes = {
-    99 : _("Law"),
-    98 : _("Rejected by parliament"),
-}
 
 possible_votes = normal_votes.copy() 
-possible_votes.update(parlement_votes)
+possible_votes.update(multiply_votes)
