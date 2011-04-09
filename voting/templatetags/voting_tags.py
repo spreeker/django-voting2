@@ -4,6 +4,7 @@ from django.utils.html import escape
 from voting.models import Vote
 from voting.managers import possible_votes
 
+import logging
 
 register = template.Library()
 
@@ -68,9 +69,11 @@ class VotesForObjectsNode(template.Node):
         counts_on_objects = Vote.objects.get_for_objects_in_bulk(objects)
 
         for object_id in counts_on_objects.keys(): 
-            vote_counts = dict.fromkeys( possible_votes.keys() , 0 )
-            vote_counts.update( counts_on_objects[object_id])
-            vote_counts[2] = vote_counts[-1] # template does not allow -1
+            # all vote types default to 0.
+            vote_counts = dict.fromkeys(possible_votes.keys(), 0)
+            vote_counts.update(counts_on_objects[object_id])
+            vote_counts[2] = vote_counts[-1] # we cannot index -1 in templates.
+            vote_counts.pop(-1)
             counts_on_objects[object_id] = vote_counts
 
         context[self.context_var] = counts_on_objects 
@@ -194,7 +197,6 @@ register.tag('dict_entry_for_item', get_dict_entry_for_item)
 register.tag('vote_counts_for_object', get_vote_counts_for_object)
 register.tag('vote_counts_for_objects', get_vote_counts_for_objects)
 
-
 # Filters
 
 def vote_display(vote):
@@ -206,6 +208,9 @@ def vote_display(vote):
 
         {{ vote|vote_display }}
     """
+    vote = vote if vote != 2 else -1 # dealing with the -1 case.
     return possible_votes[vote] 
 
 register.filter(vote_display)
+
+
