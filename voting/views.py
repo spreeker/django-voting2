@@ -34,8 +34,6 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
             The object being voted on.
         direction
             The type of vote which will be registered for the object.
-
-
     """
     if allow_xmlhttprequest and request.is_ajax():
         return xmlhttprequest_vote_on_object(request, model, direction,

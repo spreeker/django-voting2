@@ -19,8 +19,9 @@ class VoteHistory:
     def process_request(self, request):
         if request.user.is_authenticated():
             if request.session.has_key("vote_history"):
-                    self.save_votes(request, request.user, request.session["vote_history"])
+                    vote_history = request.session["vote_history"]
                     del request.session["vote_history"]
+                    self.save_votes(request, request.user, vote_history)
         return None
 
     def save_votes(self, request, user, votes):
@@ -31,4 +32,8 @@ class VoteHistory:
                 issue = Issue.objects.get(id=issue_id)
             except Issue.DoesNotExist:
                 continue
-            actions.vote(user, issue, int(direction), keep_private=False)   
+            try:
+                actions.vote(user, issue, int(direction), keep_private=False)   
+            except ValueError:
+                #wrong direction code.
+                pass

@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 votes = {
     -1 : _(u"Against"),
+    0  : _(u"blank"),
     1  : _(u"For"),
 }
 

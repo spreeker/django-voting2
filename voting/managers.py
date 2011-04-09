@@ -68,7 +68,7 @@ class VoteManager(models.Manager):
 
         return queryset.order_by("-time_stamp")
     
-    def get_for_object(self, obj, all=False):
+    def get_object_votes(self, obj, all=False):
         """
         Get a dictionary mapping vote to votecount
         """
@@ -119,7 +119,10 @@ class VoteManager(models.Manager):
         return vote_dict
 
     def get_popular(self, Model, object_ids=None, reverse=False, min_tv=2):
-        """ return queryset ordered by popularity """
+        """ return queryset ordered by popularity 
+        
+            min_tv = minimum total votes, to put in a threshold.
+        """
         ctype = ContentType.objects.get_for_model(Model)
         queryset = self.filter(content_type=ctype,)
         queryset = queryset.filter(is_archived=False) 
@@ -218,17 +221,19 @@ class VoteManager(models.Manager):
 
     def get_for_direction(self, Model, directions=[1,-1]):
         """
-        return objects with a specific direction for ...
-        TODO
+        return object_ids with a specific direction. 
         """
         ctype = ContentType.objects.get_for_model(Model)
         queryset = self.filter(content_type=ctype,)
         queryset = queryset.filter(is_archived=False) 
         queryset = queryset.filter(direction__in=directions)
+        queryset = queryset.values('object_id',)
 
         return queryset
 
-    def record_vote(self, user, obj, direction, keep_private=False, api_interface=None):
+    def record_vote(self, user, obj, direction, 
+                keep_private=False, api_interface=None, 
+                directions=normal_votes.keys()):
         """
         Archive old votes by switching the is_archived flag to True
         for all the previous votes on <obj> by <user>.
@@ -236,11 +241,12 @@ class VoteManager(models.Manager):
         We save old votes for research, probable interesting
         opinion changes.
         """
-        if not direction in possible_votes.keys():
-            raise ValueError('Invalid vote %s must be in %s' % (direction, possible_votes.keys()))
+        if not direction in directions:
+            raise ValueError('Invalid vote %s must be in %s' % (direction, directions))
 
         ctype = ContentType.objects.get_for_model(obj)
         votes = self.filter(user=user, content_type=ctype, object_id=obj._get_pk_val(), is_archived=False)
+        votes = votes.filter(direction__in=directions)
 
         voted_already = False
         repeated_vote = False
@@ -265,8 +271,10 @@ class VoteManager(models.Manager):
 # Generic annotation code to annotate queryset from other Models with
 # data from the Vote table 
 # 
-# NOTE: my experience is that below raw sql works but is very slow.
+# NOTE: my experience is that below raw sql works but is slow.
 # 
+#issues = vote_annotate(issues, Vote.payload, 'vote', Sum, desc=False)
+#
 # more info:
 #
 # http://djangosnippets.org/snippets/2034/
