@@ -27,7 +27,7 @@ class VotesByUserNode(template.Node):
         self.user = user
         self.objects = objects
         self.context_var = context_var
-    #TODO if anonymous get votes from session 
+    #TODO if anonymous get votes from session
     def render(self, context):
         try:
             user = template.resolve_variable(self.user, context)
@@ -49,9 +49,10 @@ class VotesForObjectNode(template.Node):
             return ''
 
         vote_counts = Vote.objects.get_object_votes(object)
-        votes = dict.fromkeys( possible_votes.keys , 0 ) 
+        votes = dict.fromkeys( possible_votes.keys(), 0 )
         votes.update(vote_counts)
-        context[self.context_var] = votes 
+        votes[2] = votes[-1] # we cannot index -1 in templates.
+        context[self.context_var] = votes
         return ''
 
 class VotesForObjectsNode(template.Node):
@@ -64,10 +65,10 @@ class VotesForObjectsNode(template.Node):
             objects = template.resolve_variable(self.objects, context)
         except template.VariableDoesNotExist:
             return ''
-        
+
         counts_on_objects = Vote.objects.get_for_objects_in_bulk(objects)
 
-        for object_id in counts_on_objects.keys(): 
+        for object_id in counts_on_objects.keys():
             # all vote types default to 0.
             vote_counts = dict.fromkeys(possible_votes.keys(), 0)
             vote_counts.update(counts_on_objects[object_id])
@@ -75,7 +76,7 @@ class VotesForObjectsNode(template.Node):
             vote_counts.pop(-1)
             counts_on_objects[object_id] = vote_counts
 
-        context[self.context_var] = counts_on_objects 
+        context[self.context_var] = counts_on_objects
         return ''
 
 class DictEntryForItemNode(template.Node):
@@ -208,7 +209,7 @@ def vote_display(vote):
         {{ vote|vote_display }}
     """
     vote = vote if vote != 2 else -1 # dealing with the -1 case.
-    return possible_votes[vote] 
+    return possible_votes[vote]
 
 register.filter(vote_display)
 
