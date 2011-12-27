@@ -1,3 +1,9 @@
+note
+====
+
+there are other, better maintained voting apps out there now.
+
+
 django-voting2
 ==============
 
