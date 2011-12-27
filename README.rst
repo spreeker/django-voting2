@@ -36,5 +36,4 @@ many small code clean ups,
 TODO
 ====
 
-Make this a better package.. a better name maybe?
 if you find this code useful don't hesitate to let me know.
